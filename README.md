@@ -1,4 +1,4 @@
-# brand-creator-rg
+# rg-brand-creator-skill
 
 A Claude skill that turns the style of a reference website into a finished, brand-specific `DESIGN.md` that Claude Code, or any LLM, can build projects from.
 
@@ -14,21 +14,21 @@ You give it one or more reference URLs. It extracts their design language, helps
 
 ## Install
 
-**Claude Code.** Copy the inner `brand-creator-rg/` folder into `~/.claude/skills/`:
+**Claude Code.** Copy the inner `rg-brand-creator-skill/` folder into `~/.claude/skills/`:
 
 ```bash
-cp -R brand-creator-rg ~/.claude/skills/
+cp -R rg-brand-creator-skill ~/.claude/skills/
 ```
 
 Or link it so edits apply immediately:
 
 ```bash
-ln -s "$(pwd)/brand-creator-rg" ~/.claude/skills/brand-creator-rg
+ln -s "$(pwd)/rg-brand-creator-skill" ~/.claude/skills/rg-brand-creator-skill
 ```
 
-**Claude (web or desktop chat).** Zip the inner `brand-creator-rg/` folder and upload it under Settings, Capabilities, Skills. The chat cannot install Dembrandt by itself; add it to your connectors first.
+**Claude (web or desktop chat).** Zip the inner `rg-brand-creator-skill/` folder and upload it under Settings, Capabilities, Skills. The chat cannot install Dembrandt by itself; add it to your connectors first.
 
-It activates when you ask for a design system, a `DESIGN.md`, a brand style guide, or the style of a reference site adapted to your brand. You can also call it directly with `/brand-creator-rg`.
+It activates when you ask for a design system, a `DESIGN.md`, a brand style guide, or the style of a reference site adapted to your brand. You can also call it directly with `/rg-brand-creator-skill`.
 
 ## Requirements
 
@@ -38,7 +38,7 @@ It activates when you ask for a design system, a `DESIGN.md`, a brand style guid
 ## Contents
 
 ```
-brand-creator-rg/
+rg-brand-creator-skill/
   SKILL.md                              the skill
   references/design-md-template.md      shape of the final DESIGN.md
   references/migration-prompt-template.md   prompt template for refinements

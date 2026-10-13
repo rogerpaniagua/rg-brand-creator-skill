@@ -1,5 +1,5 @@
 ---
-name: brand-creator-rg
+name: rg-brand-creator-skill
 description: Use when the user wants a design system, DESIGN.md, brand style guide or visual direction for a website, product or company; wants the style of a reference site (a URL) adapted to their own brand; mentions Dembrandt, Brandfetch or a brandbook as input; wants to adjust an existing DESIGN.md (for example squarer buttons or another font); or is about to redesign a site that has no design system, even if they never say "DESIGN.md".
 ---
 
