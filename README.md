@@ -4,14 +4,6 @@ A Claude skill that turns the style of a reference website into a finished, bran
 
 You give it one or more reference URLs. It extracts their design language, helps you make it your own (from a brandbook or a short interview), and writes a self-contained `DESIGN.md` with tokens per component. It then explains how to build from the file and how to refine it later ("squarer buttons", "another font") with a migration prompt for what is already built.
 
-## About
-
-Created by [Roger Paniagua](https://rogerpaniagua.com), Creative Strategy Lead, from the process used to rebuild his own portfolio: pick a reference that feels right, extract its style, then make it unmistakably yours. The same process now serves client brands and product work.
-
-It is shared as an open resource for the community. The idea behind it is simple: a design system should come from brand decisions, not from copying a site. The reference is the starting material and the brand's choices always win.
-
-Feedback, issues and improvements are welcome.
-
 ## What it does
 
 1. **Extract.** Reads each reference URL with the [Dembrandt](https://www.dembrandt.com/mcp) MCP, then verifies the values that decide the style against the real page with a bundled probe (`scripts/probe.js`), because generated summaries can be wrong (for example a light palette on a dark site).
