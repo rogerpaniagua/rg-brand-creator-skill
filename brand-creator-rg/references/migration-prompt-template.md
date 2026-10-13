@@ -9,6 +9,9 @@ CHANGE
 - <token>: <old value> -> <new value>   (reason: <why>)
 - <second token if any>
 
+NEW OR SPLIT TOKENS (only if any)
+- <new token> = <value>, now used by <components that keep their old look>
+
 APPLY TO
 - <components that use this token, by name>
 

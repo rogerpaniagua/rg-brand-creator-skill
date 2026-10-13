@@ -17,6 +17,8 @@ colors:
     muted: "#"           # secondary text, must keep 4.5:1
     line: "rgba(...)"
     accent: "#"          # fills and borders
+    accent-hover: "#"
+    accent-active: "#"
     accent-text: "#"     # accent used as text, contrast-checked
     on-accent: "#"       # text on accent fills
     success: "#"
@@ -29,6 +31,7 @@ typography:
   font-mono: "<Family>, <fallbacks>"
   display:   { size: "", weight: , line-height: , tracking: "" }
   heading:   { ... }
+  subheading: { ... }
   body:      { ... }
   ui:        { ... }
   mono:      { ... }
@@ -41,9 +44,11 @@ radius:                  # one token per component family; never one global valu
   tag: ""
   control-sm: ""         # switches, chips, small controls: separate from buttons
 border: { width: "1px", button: "", card: "", input: "" }
+elevation: { none: "", raised: "", overlay: "" }   # shadows or ring borders, exact values
+focus: { ring: "", offset: "", color: "" }            # visible on every background, 3:1 minimum
 motion: { duration: "150ms", easing: "cubic-bezier(...)", reduced-motion: "respect" }
 components:
-  button-primary: { radius: "{radius.button}", height: "", padding: "", background: "{colors.accent}", color: "{colors.on-accent}", hover: "", focus: "", disabled: "" }
+  button-primary: { radius: "{radius.button}", height: "", padding: "", background: "{colors.accent}", color: "{colors.on-accent}", hover: "{colors.accent-hover}", focus: "{focus.ring}", disabled: "" }
   button-secondary: { ... }
   input: { ... }
   card: { ... }
@@ -60,7 +65,7 @@ exceptions:
 5. Shape (radius per component, borders, elevation)
 6. Components (states for each: default, hover, focus, active, disabled)
 7. Motion
-8. Imagery, icons and logo (clear space, minimum size, assets paths)
+8. Imagery, icons and logo (clear space, minimum size, assets paths; mark any file not provided as **MISSING: <path>**)
 9. Accessibility (contrast table, focus, reduced motion, touch targets)
 10. Do and Don't
 11. Assumptions to confirm
