@@ -6,6 +6,12 @@ Flujo: extraer estilo con Dembrandt (MCP) → hacerlo de la marca (brandbook o e
 
 ## Contenido
 - `brand-creator-rg/SKILL.md`: la skill.
+- `brand-creator-rg/references/`: plantilla del `DESIGN.md` y plantilla del prompt de migración.
+- `brand-creator-rg/scripts/probe.js`: sonda que lee los estilos reales de una página (se pega en el navegador integrado).
+
+## Requisitos
+- Dembrandt (MCP). Si falta, la skill lo instala; necesita Node/npx y el Chromium de Playwright que indique su error.
+- Navegador integrado de Claude (para la sonda y como plan B de extracción).
 
 ## Instalar
 Copia la carpeta interna `brand-creator-rg/` a `~/.claude/skills/`:
