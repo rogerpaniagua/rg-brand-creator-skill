@@ -45,11 +45,6 @@ brand-creator-rg/
   scripts/probe.js                      reads real computed styles from the page
 ```
 
-## Known limits
-
-- Tested end to end on real sites (linear.app, vercel.com) and with scripted scenarios for multi-URL merging, incomplete brandbooks and refinements. The first-time Dembrandt install on a clean machine has not been verified.
-- The probe samples what is visible on the page; cards or components further down need other pages or scrolling. Sites that block reading their stylesheets leave CSS variables empty.
-
 ## License
 
 MIT. See `LICENSE`.
