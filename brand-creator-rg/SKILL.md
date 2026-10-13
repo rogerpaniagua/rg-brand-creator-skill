@@ -1,61 +1,68 @@
 ---
 name: brand-creator-rg
-description: Turns a reference website's design into a brand's own, finished DESIGN.md that Claude Code or any LLM can build projects from. Starts by extracting style from one or more reference URLs with the Dembrandt MCP, then makes it the brand's own using their brandbook, visual assets or a short interview, and ends with guidance for building from the resulting DESIGN.md. Use whenever the user wants a design system, DESIGN.md, brand style guide or visual direction for a website, product or company, wants to "extract the style" of a site and adapt it to their brand, mentions Dembrandt, Brandfetch or a brandbook as input, or is about to start a redesign and has no design system yet, even if they never say "DESIGN.md".
+description: Use when the user wants a design system, DESIGN.md, brand style guide or visual direction for a website, product or company; wants the style of a reference site (a URL) adapted to their own brand; mentions Dembrandt, Brandfetch or a brandbook as input; wants to adjust an existing DESIGN.md (for example squarer buttons or another font); or is about to redesign a site that has no design system, even if they never say "DESIGN.md".
 ---
 
 # Brand creator
 
-Output: one finished `DESIGN.md` for a specific brand, project or company. Not a copy of the reference: the reference is the starting material, the brand's decisions win every conflict. This skill does not build the site; its last phase teaches how to build from the file.
+Output: one finished `DESIGN.md` for a specific brand, project or company. The reference is starting material, never the answer: the brand's decisions win every conflict. This skill does not build the site; its last phases explain how to build from the file and how to refine it.
 
-Talk to the user in their language. Write the `DESIGN.md` in English (LLMs read it best that way).
+Talk to the user in their language. Write `DESIGN.md` in English (LLMs read it best that way). The exact shape of the file is in `references/design-md-template.md`: read it before Phase 3.
 
 ## Phase 1: Extract the base
 
-1. Ask for the reference URL(s) first. Explain the point: pick sites at the level and style the brand wants to reach. Several URLs are welcome; the best of each will be combined. Also ask which page and, if relevant, which mode (dark/light).
-2. Dembrandt is the core of this skill, so make sure it is there without asking. Check for tools named `mcp__dembrandt__*`. If they are missing, install it yourself and tell the user afterwards what you did:
-   - Claude Code: `claude mcp add --transport stdio dembrandt -- npx -y --package dembrandt dembrandt-mcp` (registers it for all projects).
-   - Claude Desktop (no CLI available): add `{"dembrandt": {"command": "npx", "args": ["-y", "--package", "dembrandt", "dembrandt-mcp"]}}` under `mcpServers` in its config.
-   A freshly added MCP usually appears only after a restart or reload. If the tools are still not available, tell the user to restart and re-run the skill, and keep the URLs they gave so nothing is lost. If the install fails (no Node/npx, no network), report the exact error and fix the cause; do not skip the extraction or invent tokens by hand.
-3. Extract each URL: `get_design_tokens`, `get_color_palette`, `get_typography`, `get_spacing`, `get_surfaces`, `get_component_styles`, `get_brand_identity`; then `generate_design_md` and `get_findings`. Extraction launches a real browser and can take a while: follow `get_job_status` instead of relaunching. Use `check_contrast` for the text/background pairs that matter. Verify the extracted mode matches what the page really shows: `generate_design_md` can return a light palette for a dark site, so compare it with the real colour palette and discard what does not match.
-4. With several URLs, merge: keep what they agree on, pick the best of each where they differ, and note where each decision came from. Drop reference-specific noise (its logo, product imagery, tracking colours, one-off values).
-5. Show the user a short summary of the base style (palette, type, shape, tone) before moving on.
+1. **URLs.** If the user already gave them, do not ask again. Ask only which page and which mode to read (default: the mode the page shows by default). If they gave none, ask for one or several, at the level and style the brand wants to reach.
+2. **Dembrandt is the core of this skill.** Look for tools named `mcp__dembrandt__*`. If they exist, continue without comment. If not, install it yourself without asking and say afterwards what you did (if the environment shows a permission prompt, tell the user to approve it):
+   - Claude Code: `claude mcp add --transport stdio dembrandt -- npx -y --package dembrandt dembrandt-mcp`
+   - Claude Desktop (no CLI): add `{"dembrandt": {"command": "npx", "args": ["-y", "--package", "dembrandt", "dembrandt-mcp"]}}` under `mcpServers` and restart.
+   A new MCP usually appears only after a restart. If the tools are still missing, ask the user to restart and re-run the skill, keeping their URLs. If installing fails (no Node, no network), report the exact error and fix the cause.
+3. **Extract each URL:** `get_design_tokens`, `get_color_palette`, `get_typography`, `get_spacing`, `get_surfaces`, `get_component_styles`, `get_brand_identity`, then `generate_design_md` and `get_findings`. Extraction opens a real browser and takes a while: follow `get_job_status` instead of relaunching. Run `check_contrast` on the pairs that matter.
+4. **Check the extracted mode against the real page.** `generate_design_md` can return a light palette for a dark site: compare with the real palette and discard what does not match.
+5. **If extraction fails** (site blocks automated browsers, login wall, timeouts): run `check_robots`, try once more with a different page, and if it still fails ask the user for screenshots or an HTML export of the page and read the style from those. Never invent tokens to fill the gap.
+6. **Merge several URLs** with this precedence: what the user has already said, then what fits the product type, then what the sources agree on. Where sources conflict and neither fits, drop both and leave the decision for the interview. Never blend values from two sources (6 px from one and 8 px from the other is not "the best of both"). Drop reference-specific noise (its logo, imagery, copy, tracking colours, one-off values).
+7. **Show a short summary** of the base (palette, type, shape, motion, tone) with a small table of where each decision came from, and say it is provisional until the brand decisions come in. Provenance lives in this summary, not in the final `DESIGN.md`.
 
 ## Phase 2: Make it the brand's own
 
-Ask: "Do you have a brandbook, visual ecosystem or any document or artifact that explains how your brand looks and works?" Accept anything: PDF, Brandfetch link, Figma, existing site, logo and font files, guidelines, screenshots.
+Ask: "Do you have a brandbook, visual ecosystem or any document that explains how your brand looks and works?" Accept anything: PDF, Brandfetch link, Figma, existing site, logo and font files, guidelines, screenshots.
 
-- **If yes:** read all of it, map it onto the base, and tell the user what you could extract and what is still missing ("I have colours and logo, I am missing typography and tone"). Keep asking until nothing essential is missing.
-- **If no:** interview in short rounds (colour, typography, shape and spacing, motion and tone, the "never" list). Each round shows concrete options (for example three font pairings with the reason for each) and proposes a default so the user can just say yes. Brand decisions override the reference.
+- **If yes:** read it all, map it onto the base, and say what you extracted and what is missing ("I have colours and logo, I am missing typography and motion"). Keep asking until nothing essential is missing.
+- **If no:** interview in short rounds. Always cover colour, typography, shape and spacing, motion and tone, and the "never" list; add rounds when the base is complex (states, density, light and dark). Each round shows concrete options and proposes a default so the user can just say yes. Brand decisions override the reference.
 
-**Typography is always an explicit decision, even when the reference fonts are open and free.** Tell the user which fonts the reference uses and whether they are open or proprietary, then ask: keep the same fonts, or propose alternatives? When they want alternatives, give two or three options in a small table (heading/body and mono, character of each, licence), recommend one and say why, and note what it fixes in the reference (for example a flat hierarchy). Licence is a constraint, not the question: the question is whether the brand wants that voice or its own. If the brand has its own fonts (brandbook, files), those win and no proposal is needed.
-
-What counts as "essential" is for you to judge from how complex the extracted base is: a rich system needs more answers (states, density, dark/light, motion) than a simple one. Do not use a fixed questionnaire; ask what is needed to build this specific system. Anything the user truly does not know, propose a sensible choice and mark it as an assumption.
+Rules for both paths:
+- **Typography is always an explicit decision**, even when the reference fonts are open. Say which fonts the reference uses and whether they are open or proprietary, then ask: keep them or propose alternatives? When the user wants alternatives, or has not decided, give two or three options in a small table (heading/body and mono, character, licence), recommend one and say why. Licence is a constraint, not the question: the question is whether the brand wants that voice or its own. A brand's own fonts always win.
+- **A single brand colour is not a system.** Derive neutrals, semantic colours (success, warning, danger, info) and an accent-as-text colour and an on-accent colour that pass contrast, for every mode needed, and mark each as an assumption. If the brand colour fails contrast as text or under text, say so and propose the fix.
+- **Do not under-ask.** Every value you choose yourself instead of getting it from the user or the brandbook is an assumption and goes into the assumptions table. If most of a round is your own defaults, say so and ask for the one decision that matters most.
+- Judge what is "essential" from the complexity of the base; there is no fixed questionnaire.
 
 ## Phase 3: Write the final DESIGN.md
 
-Say "I have what I need" and confirm before writing. If the project folder is not clear, ask where to save. Copy supplied assets (logo, favicon, fonts) next to the file, for example `assets/`, and reference them from `DESIGN.md`. Then write `DESIGN.md` at the project root (never overwrite an existing one without asking; offer a backup). It must be self-contained, with no leftovers from the reference:
-- YAML front matter with tokens (colours with roles, typography scale, spacing, radii, borders/shadows). Define tokens per component, not only globally: `radius.button`, `radius.card`, `radius.input`, `radius.tag`, button height and padding, border width per component, and so on. Components reference these tokens and each exception is named explicitly (for example "the hero CTA is a pill"). This is what makes a later tweak a one-line change that cannot ripple into the rest. Be as specific as possible: exact values, units, states (hover, focus, disabled), and what each token applies to and does not.
-- Sections: overview and tone, colour, typography, layout and spacing, shape, components, motion, accessibility (contrast ratios checked), Do and Don't, assumptions to confirm.
-- Fonts that are proprietary in the reference are replaced by available equivalents, and the choice is explained.
+Say "I have what I need" and confirm before writing. Save at the project root by default; ask only if the location is unclear. Never overwrite an existing `DESIGN.md` without asking (offer a backup). Copy supplied assets (logo, favicon, fonts) to `assets/` and reference them; if a file was described but not provided, reference the expected path and flag it as missing.
 
-Check contrast before finishing; fix or flag any text pair below 4.5:1.
+Follow `references/design-md-template.md`. The requirements that matter most:
+- **Tokens per component, not one global value:** `radius.button`, `radius.card`, `radius.input`, `radius.tag`, a separate `radius.control-sm` for small controls such as switches and chips, heights, paddings and border widths per component. This is what lets a later tweak change one line without rippling elsewhere.
+- **Exact values with units and every state** (hover, focus, active, disabled), and what each token applies to and does not.
+- **Exceptions named explicitly** in the `exceptions` list (for example "the hero CTA is a pill").
+- **Self-contained:** no leftovers from the reference, no sources named. Proprietary reference fonts are replaced by available equivalents and the choice explained.
+- **Sections 11 to 13 always present:** assumptions table, "Building with this file", and an empty change log.
+- Check contrast for every text pair; fix or flag anything under 4.5:1.
 
 ## Phase 4: How to build from it
 
-Finish with practical guidance, in the chat and as a short "Building with this file" section at the end of `DESIGN.md`:
-- Tell Claude Code (or any LLM) to read `DESIGN.md` first and use only its tokens; put it at the repo root and mention it in `CLAUDE.md`/`AGENTS.md`.
-- Use visual references as inspiration for layout and pattern, then translate them into the brand's tokens instead of copying their styles.
-- Build one section at a time, review, then continue; keep styles in one place with tokens as variables; re-check contrast after changes.
-- When the system evolves, update `DESIGN.md` first, then the code (Phase 5 describes how, including the prompt to migrate what is already built).
+Finish with practical guidance, in the chat and in section 12 of `DESIGN.md`:
+- Tell Claude Code (or any LLM) to read `DESIGN.md` first and use only its tokens; keep it at the repo root and mention it in `CLAUDE.md` or `AGENTS.md`.
+- Use other sites as inspiration for layout and patterns, then translate them into the brand's tokens instead of copying their styles.
+- Build one section at a time and review it; define each token once as a variable and use it by name; re-check contrast after changes.
+- When the system evolves, update `DESIGN.md` first, then the code (Phase 5).
 
 ## Phase 5: Refine (repeatable)
 
-The user will often see the system built and want to adjust it ("buttons less rounded, more rectangular"). Handle every adjustment like this:
+The user will often see the system built and want to adjust it ("buttons squarer", "another font"). For every adjustment:
 
-1. **Pin it down.** Turn the vague wish into exact values and show two or three concrete options with their effect (for example 0, 2 or 4 px radius), recommending one. If the user does not know, pick the best and say why.
-2. **Check scope and coherence.** Say which components the token touches and which it does not. Warn if the change breaks the system's consistency (square buttons next to very round cards) and propose the matching adjustment.
-3. **Check side effects.** Colour changes: re-run contrast. Font changes: re-check the type scale and line lengths.
-4. **Update `DESIGN.md`:** change the specific token, and add a line to a "Change log" section at the end (date, token, old value, new value, reason). The file is the source of truth, so it is edited first.
-5. **Hand over a migration prompt**, ready to paste into Claude Code or the LLM that develops the project, to apply the same change to what is already built. Make it concrete: the token, old and new value, where to look (components and files by name when known), the explicit exceptions, and what to verify afterwards (no hard-coded values left, contrast, responsive). Do not edit the project's code yourself: the developer LLM knows the code, this skill knows the design, and the prompt is the bridge.
+1. **Pin it down.** Turn the wish into exact values; show two or three options with their effect (for example 0, 2 or 4 px) and recommend one. If the user does not know, choose and say why.
+2. **Audit the token's real use before changing it.** List every component that uses it. If the token is shared with things the user did not mention (switches, chips, bubbles, tracks), split those into their own token first, so that only the intended components change.
+3. **Check coherence and side effects.** Say what the change touches and what it does not; if it clashes with the rest (square buttons next to very round cards), propose the matching adjustment but do not apply it without the user's yes. Colour changes: re-run contrast. Font changes: re-check the scale and line lengths.
+4. **Update `DESIGN.md`:** change the token, bump `version` and `updated`, and add a row to the change log.
+5. **Hand over a migration prompt** from `references/migration-prompt-template.md`, filled in, ready to paste into the LLM that develops the project. Do not edit the project's code yourself: that LLM knows the code, this skill knows the design.
 
-Repeat as many times as needed. Keep the change log honest so any LLM reading `DESIGN.md` understands why the system is the way it is.
+Repeat as many times as needed and keep the change log honest, so any LLM reading the file understands why the system is the way it is.
