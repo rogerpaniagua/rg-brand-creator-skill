@@ -1,0 +1,14 @@
+{
+  "name": "rg-brand-creator-skill",
+  "version": "0.1.0",
+  "description": "A Claude Code skill that turns the style of a reference website into your own brand DESIGN.md.",
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=18" },
+  "bin": { "rg-brand-creator-skill": "bin/install.mjs" },
+  "scripts": { "test": "node --test test/*.test.mjs" },
+  "keywords": ["claude-code", "skill", "design-md", "brand", "design-system"],
+  "repository": { "type": "git", "url": "git+https://github.com/rogerpaniagua/rg-brand-creator-skill.git" },
+  "bugs": { "url": "https://github.com/rogerpaniagua/rg-brand-creator-skill/issues" },
+  "homepage": "https://github.com/rogerpaniagua/rg-brand-creator-skill#readme"
+}

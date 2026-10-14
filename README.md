@@ -14,19 +14,31 @@ You give it one or more reference URLs. It extracts their design language, helps
 
 ## Install
 
-**Claude Code.** Copy the inner `rg-brand-creator-skill/` folder into `~/.claude/skills/`:
+You need Node 18 or newer (`node -v` to check; get it from [nodejs.org](https://nodejs.org)). Nothing else.
 
-```bash
-cp -R rg-brand-creator-skill ~/.claude/skills/
+**In Claude Code, the easy way.** Open Claude Code, paste this and send. Claude installs the skill and tells you when to restart:
+
+```text
+Install the RG Brand Creator skill from https://github.com/rogerpaniagua/rg-brand-creator-skill. Run npx github:rogerpaniagua/rg-brand-creator-skill and tell me when to restart Claude Code.
 ```
 
-Or link it so edits apply immediately:
+**From your terminal.** One command, from any folder. It creates `~/.claude/skills` if it is missing and copies the skill into it:
 
 ```bash
-ln -s "$(pwd)/rg-brand-creator-skill" ~/.claude/skills/rg-brand-creator-skill
+npx github:rogerpaniagua/rg-brand-creator-skill
 ```
 
-**Claude (web or desktop chat).** Zip the inner `rg-brand-creator-skill/` folder and upload it under Settings, Capabilities, Skills. The chat cannot install Dembrandt by itself; add it to your connectors first.
+Then close and reopen Claude Code. To update later, run the same command with `--force`. Use `--target <folder>` for another skills folder, for example the `.claude/skills` of a single project.
+
+**By hand.** Run this from any folder. The `mkdir` matters: without it, `cp` copies the skill under the wrong name when `~/.claude/skills` does not exist yet, and Claude never loads it.
+
+```bash
+git clone https://github.com/rogerpaniagua/rg-brand-creator-skill.git
+mkdir -p ~/.claude/skills
+cp -R rg-brand-creator-skill/rg-brand-creator-skill ~/.claude/skills/
+```
+
+This skill is for Claude Code. It needs the Dembrandt MCP and a browser, which the chat apps cannot set up for you.
 
 It activates when you ask for a design system, a `DESIGN.md`, a brand style guide, or the style of a reference site adapted to your brand. You can also call it directly with `/rg-brand-creator-skill`.
 
